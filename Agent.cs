@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class Agent : MonoBehaviour
 {
+    public Transform Player;
 
     public Transform[] pointsavisiter;
     private int destPoint = 0;
@@ -30,7 +31,20 @@ public class Agent : MonoBehaviour
     {
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
             VaAuProchainPoint();
-       
+
+
+        void OverLapShpere(Vector3 center, float radius)
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+            foreach (var hitCollider in hitColliders)
+            {
+                if (hitCollider.CompareTag("Player"))
+                {
+                    Vector3 targetPosition = new Vector3(Player.transform.position.x, transform.position.y, Player.transform.position.z);
+                transform.LookAt(targetPosition);
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -38,9 +52,10 @@ public class Agent : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             Debug.Log("Touch");
-           Vector3 scaleChange = new Vector3(1f, 1f, 1f);
+           Vector3 scaleChange = new Vector3(0.5f, 0.5f, 0.5f);
             gameObject.transform.localScale += scaleChange;
         }
+      
     }
 }
 
